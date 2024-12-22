@@ -1,12 +1,13 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entitys.User;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     List<User> findAll(); // Получить всех пользователей
 
@@ -17,4 +18,6 @@ public interface UserService {
     void update(Long id, User user); // Обновить данные пользователя по ID
 
     void delete(Long id); // Удалить пользователя по ID
+
+    User findByUsername(String username);
 }
