@@ -12,7 +12,6 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,31 +34,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id).
+                orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + id));
     }
 
     @Transactional
     @Override
     public void save(User user) {
+
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            Role defaultRole = roleRepository.findById(1L)
-                    .orElseThrow(() -> new RuntimeException("Default role not found"));
-            user.setRoles(Collections.singleton(defaultRole));
-        } else {
-            Set<Role> roles = user.getRoles().stream()
-                    .map(role -> roleRepository.findById(role.getId())
-                            .orElseThrow(() -> new RuntimeException("Role not found")))
-                    .collect(Collectors.toSet());
-            user.setRoles(roles);
-        }
+        Set<Role> roles = user.getRoles().stream()
+                .map(role -> roleRepository.findById(role.getId())
+                        .orElseThrow(() -> new RuntimeException("Role not found with ID: " + role.getId())))
+                .collect(Collectors.toSet());
+        user.setRoles(roles);
 
         userRepository.save(user);
     }
+
 
     @Transactional
     @Override

@@ -11,7 +11,7 @@ public interface UserService extends UserDetailsService {
 
     List<User> findAll(); // Получить всех пользователей
 
-    Optional<User> findById(Long id); // Найти пользователя по ID (с учётом отсутствия)
+    User findById(Long id); // Найти пользователя по ID (с учётом отсутствия)
 
     void save(User user); // Добавить нового пользователя
 

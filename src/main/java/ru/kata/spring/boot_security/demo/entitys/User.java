@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
@@ -21,6 +22,7 @@ public class User implements UserDetails {
     private String password;
     private String surname;
     private String email;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -78,8 +80,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return roles.stream()
+                .map(role -> (GrantedAuthority) role)
+                .collect(Collectors.toList());
     }
+
 
     public String getEmail() {
         return email;

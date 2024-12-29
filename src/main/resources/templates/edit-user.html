@@ -68,6 +68,8 @@
 <body>
 <h1>Editing Data</h1>
 <form th:action="@{/user/edit}" th:object="${user}" method="post">
+    <input type="hidden" name="_method" value="patch" />
+
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" required />
 
@@ -83,11 +85,12 @@
     <button type="submit">Save</button>
 </form>
 
+
 <div class="button-container">
     <a th:href="@{/user}">
         <button>Back</button>
     </a>
-    <a th:href="@{/login}">
+    <a th:href="@{/logout}">
         <button>Logout</button>
     </a>
 </div>

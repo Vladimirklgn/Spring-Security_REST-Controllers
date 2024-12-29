@@ -5,6 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
@@ -19,12 +21,18 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", nullable = false, unique = true)
     private String roleName;
 
-    public Role() {
-
-    }
 
     public Role(String roleName) {
         this.roleName = roleName;
+    }
+
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
+
+
+    public Role() {
+
     }
 
     public Long getId() {
