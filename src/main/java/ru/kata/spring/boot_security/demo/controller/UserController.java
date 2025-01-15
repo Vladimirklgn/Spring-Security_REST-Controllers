@@ -38,29 +38,12 @@ public class UserController {
     }
 
     @PatchMapping("/edit")
-    public String patchUser(@ModelAttribute("user") User user,
-                            @AuthenticationPrincipal org.springframework.security.core.userdetails.User loggedUser) {
-
-        User currentUser = userService.findByUsername(loggedUser.getUsername());
-
-        if (user.getName() != null && !user.getName().isEmpty()) {
-            currentUser.setName(user.getName());
+    public String patchUser(@ModelAttribute("user") User user) {
+        try {
+            userService.update(user.getId(), user);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating user", e);
         }
-
-        if (user.getSurname() != null && !user.getSurname().isEmpty()) {
-            currentUser.setSurname(user.getSurname());
-        }
-
-        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-            currentUser.setEmail(user.getEmail());
-        }
-
-        if (user.getPassword() != null && !user.getPassword().isEmpty() &&
-                !passwordEncoder.matches(user.getPassword(), currentUser.getPassword())) {
-            currentUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        userService.update(currentUser.getId(), currentUser);
 
         return "redirect:/user/user-page";
     }
