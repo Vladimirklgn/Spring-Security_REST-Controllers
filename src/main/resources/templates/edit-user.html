@@ -70,6 +70,8 @@
 <form th:action="@{/user/edit}" th:object="${user}" method="post">
     <input type="hidden" name="_method" value="patch" />
 
+    <input type="hidden" name="id" th:value="${user.id}">
+
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" required />
 

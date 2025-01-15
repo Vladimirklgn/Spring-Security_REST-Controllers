@@ -27,7 +27,6 @@ public class AdminController {
     @GetMapping("/user-list")
     public String printUsers(Model model) {
         List<User> users = userService.findAll();
-        System.out.println("Users retrieved from database: " + users); // Отладочный вывод
         model.addAttribute("users", users);
         return "admin";
     }
@@ -35,7 +34,7 @@ public class AdminController {
     @GetMapping("/addUser")
     public String addUserPage(Model model) {
         List<Role> roles = roleService.findAllRoles();
-        roles.forEach(role -> System.out.println("Role: " + role.getRoleName())); // Логирование
+        roles.forEach(role -> System.out.println("Role: " + role.getRoleName()));
         model.addAttribute("user", new User());
         model.addAttribute("roles", roles);
         return "add-user";

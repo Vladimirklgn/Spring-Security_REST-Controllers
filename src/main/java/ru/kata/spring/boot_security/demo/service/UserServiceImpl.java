@@ -47,15 +47,21 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        Set<Role> roles = user.getRoles().stream()
-                .map(role -> roleRepository.findById(role.getId())
-                        .orElseThrow(() -> new RuntimeException("Role not found with ID: " + role.getId())))
-                .collect(Collectors.toSet());
-        user.setRoles(roles);
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            Role userRole = roleRepository.findByRoleName("ROLE_USER")
+                    .orElseThrow(() -> new RuntimeException("Роль ROLE_USER не найдена в БД"));
+
+            user.setRoles(Set.of(userRole));
+        } else {
+            Set<Role> roles = user.getRoles().stream()
+                    .map(role -> roleRepository.findById(role.getId())
+                            .orElseThrow(() -> new RuntimeException("Role not found with ID: " + role.getId())))
+                    .collect(Collectors.toSet());
+            user.setRoles(roles);
+        }
 
         userRepository.save(user);
     }
-
 
     @Transactional
     @Override

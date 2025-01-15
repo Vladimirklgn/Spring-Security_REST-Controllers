@@ -8,18 +8,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.entitys.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
 public class DefaultController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
-    public DefaultController(UserService userService) {
+    public DefaultController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/")
@@ -43,6 +48,7 @@ public class DefaultController {
         if (result.hasErrors()) {
             return "registration";
         }
+
         userService.save(user);
         return "redirect:/login";
     }
